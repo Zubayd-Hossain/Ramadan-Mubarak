@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ramadan Mubarak — Zubayd Hossain</title>
-  <meta name="description" content="A unique Ramadan greeting page with moon, lanterns, dua and sharing."/>
+  <meta name="description" content="Unique Ramadan greeting with real-time Sehri & Iftar countdown for Bangladesh."/>
   <style>
     :root{
       --bg1:#040818;
@@ -84,7 +84,6 @@
     .shine{
       position:absolute; inset:-60px -30px auto auto; width:220px; height:220px;
       background: radial-gradient(circle at 30% 30%, rgba(242,208,123,.28), transparent 60%);
-      filter: blur(0px);
       transform: rotate(12deg);
       pointer-events:none;
     }
@@ -99,7 +98,7 @@
       font-size: 15.5px;
       color: var(--muted);
       line-height:1.65;
-      max-width: 54ch;
+      max-width: 58ch;
     }
     .tagrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
     .tag{
@@ -107,6 +106,7 @@
       border:1px solid rgba(255,255,255,.16);
       background: rgba(0,0,0,.10);
       font-size:13px; color: rgba(255,255,255,.78);
+      white-space:nowrap;
     }
 
     .revealBox{
@@ -147,6 +147,15 @@
       font-size: 14.5px;
     }
     .field input::placeholder{color: rgba(255,255,255,.55)}
+    .field select{
+      width:100%;
+      border:none; outline:none;
+      background:transparent;
+      color:rgba(255,255,255,.92);
+      font-size:14.5px;
+      appearance:none;
+    }
+    .field option{color:#111}
 
     .rightScene{
       position:relative;
@@ -165,6 +174,7 @@
       box-shadow: 0 0 40px rgba(255,255,255,.28), 0 0 120px rgba(99,230,255,.10);
       filter: drop-shadow(0 0 12px rgba(242,208,123,.10));
       animation: moonPulse 3.8s ease-in-out infinite;
+      cursor:pointer;
     }
     .moon::after{
       content:"";
@@ -229,7 +239,6 @@
       position:absolute; inset:auto 10px 10px 10px; height:30px;
       border-radius: 14px;
       background: radial-gradient(circle at 50% 10%, rgba(242,208,123,.55), transparent 60%);
-      filter: blur(0.2px);
       opacity:.75;
     }
 
@@ -280,7 +289,7 @@
 
     /* Mosque silhouette */
     .mosque{
-      margin-top: 26px;
+      margin-top: 18px;
       height: 120px;
       border-radius: 18px;
       background:
@@ -330,8 +339,13 @@
       transition: opacity .25s ease, transform .25s ease;
     }
     .toast.show{opacity:1; transform: translateX(-50%) translateY(-4px)}
+
+    /* Countdown big numbers */
+    .bigNum{font-size:34px;font-weight:900;margin-top:6px;letter-spacing:.4px}
+    .miniRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="topbar">
@@ -355,8 +369,10 @@
     </div>
 
     <section class="hero">
+      <!-- LEFT -->
       <div class="card heroCard">
         <div class="shine"></div>
+
         <h1 id="title">Ramadan Mubarak <span class="spark">🌙</span></h1>
         <p class="sub" id="subtitle">
           May your days be filled with peace, your nights with prayers, and your heart with نور.
@@ -364,7 +380,7 @@
 
         <div class="tagrow">
           <div class="tag">✨ Unique • Premium</div>
-          <div class="tag">📱 Mobile Friendly</div>
+          <div class="tag">⏳ Live Sehri/Iftar</div>
           <div class="tag">📤 Shareable</div>
         </div>
 
@@ -386,6 +402,51 @@
           </div>
         </div>
 
+        <!-- LIVE COUNTDOWN -->
+        <div class="dua" style="margin-top:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <div style="font-weight:800" id="liveTitle">⏳ Sehri & Iftar Live (Bangladesh)</div>
+            <div class="tag" id="todayLabel">Loading…</div>
+          </div>
+
+          <div class="miniRow">
+            <div class="field" style="min-width:260px; flex:1">
+              📍
+              <select id="citySelect" aria-label="Select city">
+                <option value="Dhaka">Dhaka (Dhaka Division)</option>
+                <option value="Chattogram">Chattogram (Chattogram Division)</option>
+                <option value="Khulna">Khulna (Khulna Division)</option>
+                <option value="Rajshahi">Rajshahi (Rajshahi Division)</option>
+                <option value="Sylhet">Sylhet (Sylhet Division)</option>
+                <option value="Barishal">Barishal (Barishal Division)</option>
+                <option value="Rangpur">Rangpur (Rangpur Division)</option>
+                <option value="Mymensingh">Mymensingh (Mymensingh Division)</option>
+              </select>
+            </div>
+
+            <div class="tag" id="sourceLabel">Source: AlAdhan API</div>
+          </div>
+
+          <div class="grid" style="margin-top:14px">
+            <div class="dua" style="padding:16px;margin-top:0">
+              <div style="font-weight:800; font-size:16px" id="sehriTitle">Sehri ends in</div>
+              <div class="bigNum" id="sehriCountdown">--:--:--</div>
+              <div style="color:rgba(255,255,255,.72); margin-top:8px" id="sehriTime">Imsak: -- | Fajr: --</div>
+            </div>
+
+            <div class="dua" style="padding:16px;margin-top:0">
+              <div style="font-weight:800; font-size:16px" id="iftarTitle">Iftar in</div>
+              <div class="bigNum" id="iftarCountdown">--:--:--</div>
+              <div style="color:rgba(255,255,255,.72); margin-top:8px" id="iftarTime">Maghrib: --</div>
+            </div>
+          </div>
+
+          <p style="margin:12px 0 0; color:rgba(255,255,255,.62); line-height:1.6; font-size:13px" id="noteLine">
+            Note: Local authority times can differ by a few minutes. (You can add offsets in code if needed.)
+          </p>
+        </div>
+
+        <!-- MOSQUE -->
         <div class="mosque" title="A calm night at the masjid">
           <svg viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
             <path fill="rgba(255,255,255,.18)" d="M0,240 L0,210 L40,210 L40,170 L70,170 L70,210 L95,210 L95,140 L125,140 L125,110
@@ -399,9 +460,10 @@
         </div>
       </div>
 
+      <!-- RIGHT -->
       <div class="card rightScene" aria-hidden="true">
         <div class="stars" id="stars"></div>
-        <div class="moon"></div>
+        <div class="moon" id="moon"></div>
 
         <div class="lantern l1">
           <div class="string"></div>
@@ -429,7 +491,7 @@
                     background: rgba(0,0,0,.12); border:1px solid rgba(255,255,255,.12)">
           <div style="font-weight:700" id="miniTitle">A night of نور & peace</div>
           <div style="color:rgba(255,255,255,.72); margin-top:6px; line-height:1.65" id="miniText">
-            Turn on the lanterns and feel the calm. Scroll for a beautiful dua.
+            Turn on the lanterns and feel the calm. Tap the moon for a secret blessing.
           </div>
         </div>
       </div>
@@ -472,9 +534,9 @@
   <div class="toast" id="toast">Copied!</div>
 
   <script>
-    // Stars generator
+    // ====== Stars generator ======
     const stars = document.getElementById('stars');
-    const starCount = 42;
+    const starCount = 46;
     for(let i=0;i<starCount;i++){
       const s = document.createElement('div');
       s.className = 'star';
@@ -488,7 +550,17 @@
       stars.appendChild(s);
     }
 
-    // Language content
+    // ====== Helpers ======
+    const $ = (id)=>document.getElementById(id);
+    const toast = $('toast');
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 1200);
+    }
+
+    // ====== Language content ======
     let lang = 'en';
     const content = {
       en: {
@@ -501,7 +573,7 @@
         copyBtn: 'Copy Link',
         personalSub: 'You are remembered in my dua tonight. 🤲',
         miniTitle: 'A night of نور & peace',
-        miniText: 'Turn on the lanterns and feel the calm. Scroll for a beautiful dua.',
+        miniText: 'Turn on the lanterns and feel the calm. Tap the moon for a secret blessing.',
         sec1Title: 'A gentle reminder',
         sec1Text: 'Let this Ramadan be the month where your heart feels lighter and your prayers feel deeper. May Allah open doors you never imagined.',
         duaMeaning: 'O Allah, let us reach Ramadan and accept our deeds.',
@@ -509,7 +581,12 @@
         sec2Text: 'Type a name, tap reveal, and share the blessing. It feels warm, unique, and unforgettable.',
         sec2Note: 'Tip: Tap the moon 5 times for a secret blessing. 🌙',
         footLine: 'May this Ramadan be your turning point.',
-        lightLabel: 'Lanterns'
+        lightLabel: 'Lanterns',
+        liveTitle: '⏳ Sehri & Iftar Live (Bangladesh)',
+        todayLoading: 'Loading…',
+        noteLine: 'Note: Local authority times can differ by a few minutes. (You can add offsets in code if needed.)',
+        sehriTitle: 'Sehri ends in',
+        iftarTitle: 'Iftar in',
       },
       bn: {
         langLabel: 'বাংলা',
@@ -521,7 +598,7 @@
         copyBtn: 'লিংক কপি',
         personalSub: 'আজ রাতে আমাকে আপনার দোয়ায় মনে রাখবেন 🤲',
         miniTitle: 'নূর ও শান্তির রাত',
-        miniText: 'লণ্ঠন অন করে দেখুন—একটা শান্ত অনুভূতি আসবে। নিচে সুন্দর দোয়া আছে।',
+        miniText: 'লণ্ঠন অন করে দেখুন—একটা শান্ত অনুভূতি আসবে। চাঁদে ট্যাপ করলে গোপন বার্তা পাবেন।',
         sec1Title: 'একটি সুন্দর স্মরণ',
         sec1Text: 'এই রমজান হোক এমন একটি মাস—যেখানে মন হালকা হবে, ইবাদত গভীর হবে। আল্লাহ আপনার জন্য অজানা দরজা খুলে দিন।',
         duaMeaning: 'হে আল্লাহ, আমাদের রমজান পর্যন্ত পৌঁছে দিন এবং আমাদের আমল কবুল করুন।',
@@ -529,18 +606,14 @@
         sec2Text: 'নাম লিখুন, ট্যাপ করুন, আর শুভেচ্ছাটা শেয়ার করুন—এটা আলাদা ও মনে থাকার মতো অনুভূতি দেয়।',
         sec2Note: 'টিপস: চাঁদে ৫ বার ট্যাপ করলে গোপন বার্তা আসবে 🌙',
         footLine: 'এই রমজান আপনার জীবনে নতুন শুরু হোক।',
-        lightLabel: 'লণ্ঠন'
+        lightLabel: 'লণ্ঠন',
+        liveTitle: '⏳ সেহরি ও ইফতার লাইভ (বাংলাদেশ)',
+        todayLoading: 'লোড হচ্ছে…',
+        noteLine: 'নোট: স্থানীয় কর্তৃপক্ষের সময়ের সাথে কয়েক মিনিট পার্থক্য হতে পারে। (প্রয়োজনে কোডে অফসেট যোগ করুন)',
+        sehriTitle: 'সেহরি শেষ হতে বাকি',
+        iftarTitle: 'ইফতার হতে বাকি',
       }
     };
-
-    const $ = (id)=>document.getElementById(id);
-    const toast = $('toast');
-
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'), 1200);
-    }
 
     function applyLang(){
       const c = content[lang];
@@ -562,10 +635,20 @@
       $('sec2Note').textContent = c.sec2Note;
       $('footLine').textContent = c.footLine;
       $('lightLabel').textContent = c.lightLabel;
+
+      $('liveTitle').textContent = c.liveTitle;
+      $('noteLine').textContent = c.noteLine;
+      $('sehriTitle').textContent = c.sehriTitle;
+      $('iftarTitle').textContent = c.iftarTitle;
+
+      // refresh "Loading..." label if we are loading
+      if($('todayLabel').dataset.loading === "1"){
+        $('todayLabel').textContent = c.todayLoading;
+      }
     }
     applyLang();
 
-    // Reveal logic
+    // ====== Reveal logic ======
     const burst = $('burst');
     $('revealBtn').addEventListener('click', ()=>{
       const name = $('nameInput').value.trim();
@@ -575,20 +658,20 @@
       showToast((lang==='bn') ? 'শুভেচ্ছা দেখা যাচ্ছে ✨' : 'Blessing revealed ✨');
     });
 
-    // Language toggle
+    // ====== Language toggle ======
     $('langBtn').addEventListener('click', ()=>{
       lang = (lang==='en') ? 'bn' : 'en';
       applyLang();
       showToast((lang==='bn') ? 'বাংলা মোড' : 'English mode');
     });
 
-    // Lantern light toggle
+    // ====== Lantern light toggle ======
     $('lightToggle').addEventListener('change', (e)=>{
       document.body.classList.toggle('lit', e.target.checked);
       showToast(e.target.checked ? ((lang==='bn')?'লণ্ঠন অন ✨':'Lanterns on ✨') : ((lang==='bn')?'লণ্ঠন অফ':'Lanterns off'));
     });
 
-    // Copy link
+    // ====== Copy link ======
     $('copyBtn').addEventListener('click', async ()=>{
       try{
         await navigator.clipboard.writeText(location.href);
@@ -598,20 +681,34 @@
       }
     });
 
-    // WhatsApp share
+    // ====== WhatsApp share ======
     $('shareBtn').addEventListener('click', ()=>{
       const name = $('nameInput').value.trim();
       const greet = (lang==='bn') ? 'রমজান মোবারক' : 'Ramadan Mubarak';
+
+      const seh = $('sehriCountdown').textContent;
+      const ift = $('iftarCountdown').textContent;
+      const city = $('citySelect').value;
+
       const msg = (lang==='bn')
-        ? `${greet} 🌙✨\n${name ? ('আপনার জন্য, ' + name + ' 🤲\n') : ''}আল্লাহ আপনার জীবনকে শান্তি ও বরকতে ভরে দিন।\n\nলিংক: ${location.href}`
-        : `${greet} 🌙✨\n${name ? ('For you, ' + name + ' 🤲\n') : ''}May Allah bless you with peace and barakah.\n\nLink: ${location.href}`;
+        ? `${greet} 🌙✨\n${name ? ('আপনার জন্য, ' + name + ' 🤲\n') : ''}` +
+          `📍 ${city}\n` +
+          `⏳ সেহরি: ${seh}\n` +
+          `⏳ ইফতার: ${ift}\n\n` +
+          `আল্লাহ আপনার জীবনকে শান্তি ও বরকতে ভরে দিন।\n\nলিংক: ${location.href}`
+        : `${greet} 🌙✨\n${name ? ('For you, ' + name + ' 🤲\n') : ''}` +
+          `📍 ${city}\n` +
+          `⏳ Sehri: ${seh}\n` +
+          `⏳ Iftar: ${ift}\n\n` +
+          `May Allah bless you with peace and barakah.\n\nLink: ${location.href}`;
+
       const url = "https://wa.me/?text=" + encodeURIComponent(msg);
       window.open(url, "_blank");
     });
 
-    // Secret blessing: tap moon 5 times
+    // ====== Secret blessing: tap moon 5 times ======
     let moonTaps = 0;
-    document.querySelector('.moon').addEventListener('click', ()=>{
+    $('moon').addEventListener('click', ()=>{
       moonTaps++;
       if(moonTaps >= 5){
         moonTaps = 0;
@@ -623,6 +720,133 @@
         showToast((lang==='bn') ? 'গোপন বার্তা ✨' : 'Secret unlocked ✨');
       }
     });
+
+    // ====== LIVE SEHRI/IFTAR (Bangladesh) ======
+    const citySelect = $('citySelect');
+    const todayLabel = $('todayLabel');
+    const sehriCountdown = $('sehriCountdown');
+    const iftarCountdown = $('iftarCountdown');
+    const sehriTime = $('sehriTime');
+    const iftarTime = $('iftarTime');
+
+    // IMPORTANT:
+    // If you want to fine-tune times to match your local schedule exactly,
+    // you can add minute offsets here (example: +2 means add 2 minutes).
+    const OFFSETS = {
+      sehriEndMinutes: 0, // apply to Fajr for "Sehri ends at"
+      iftarMinutes: 0     // apply to Maghrib for Iftar
+    };
+
+    // AlAdhan method (calculation). You can try different method numbers if you want.
+    const METHOD = 2;
+    const COUNTRY = "Bangladesh";
+    const TIMEZONE = "Asia/Dhaka";
+    let timer = null;
+
+    function nowDhaka(){
+      return new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
+    }
+
+    function parseTimeToDhakaDate(hhmm){
+      // Accept "HH:MM" or "HH:MM (TZ)" formats
+      const clean = (hhmm || "").split(" ")[0].trim();
+      const parts = clean.split(":");
+      if(parts.length < 2) return null;
+      const h = Number(parts[0]), m = Number(parts[1]);
+      if(Number.isNaN(h) || Number.isNaN(m)) return null;
+      const d = nowDhaka();
+      d.setHours(h, m, 0, 0);
+      return d;
+    }
+
+    function addMinutes(dateObj, minutes){
+      if(!dateObj) return null;
+      return new Date(dateObj.getTime() + minutes * 60000);
+    }
+
+    function fmtHMS(ms){
+      if(ms < 0) ms = 0;
+      const total = Math.floor(ms/1000);
+      const h = String(Math.floor(total/3600)).padStart(2,"0");
+      const m = String(Math.floor((total%3600)/60)).padStart(2,"0");
+      const s = String(total%60).padStart(2,"0");
+      return `${h}:${m}:${s}`;
+    }
+
+    async function fetchTimings(city){
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(COUNTRY)}&method=${METHOD}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if(!res.ok) throw new Error("Failed to fetch timings");
+      const json = await res.json();
+
+      const t = json?.data?.timings || {};
+      const dateReadable = json?.data?.date?.readable || "";
+      return {
+        dateReadable,
+        fajr: t.Fajr,
+        maghrib: t.Maghrib,
+        imsak: t.Imsak
+      };
+    }
+
+    function startCountdown(times){
+      if(timer) clearInterval(timer);
+
+      const { fajr, maghrib, imsak, dateReadable } = times;
+
+      // Show date
+      todayLabel.dataset.loading = "0";
+      todayLabel.textContent = dateReadable ? `Today: ${dateReadable}` : "Today";
+
+      // Show raw timings
+      sehriTime.textContent = `Imsak: ${imsak || "--"} | Fajr: ${fajr || "--"}`;
+      iftarTime.textContent = `Maghrib: ${maghrib || "--"}`;
+
+      // Build Date objects in Dhaka timezone
+      let fajrDate = addMinutes(parseTimeToDhakaDate(fajr), OFFSETS.sehriEndMinutes);
+      let maghribDate = addMinutes(parseTimeToDhakaDate(maghrib), OFFSETS.iftarMinutes);
+
+      timer = setInterval(()=>{
+        const now = nowDhaka();
+
+        // If time already passed today, countdown stays at 00:00:00
+        if(fajrDate){
+          sehriCountdown.textContent = fmtHMS(fajrDate - now);
+        }else{
+          sehriCountdown.textContent = "--:--:--";
+        }
+
+        if(maghribDate){
+          iftarCountdown.textContent = fmtHMS(maghribDate - now);
+        }else{
+          iftarCountdown.textContent = "--:--:--";
+        }
+      }, 250);
+    }
+
+    async function loadCity(city){
+      todayLabel.dataset.loading = "1";
+      todayLabel.textContent = content[lang].todayLoading;
+
+      sehriCountdown.textContent = "--:--:--";
+      iftarCountdown.textContent = "--:--:--";
+      sehriTime.textContent = "Imsak: -- | Fajr: --";
+      iftarTime.textContent = "Maghrib: --";
+
+      try{
+        const times = await fetchTimings(city);
+        startCountdown(times);
+      }catch(e){
+        todayLabel.dataset.loading = "0";
+        todayLabel.textContent = (lang==='bn') ? "টাইম লোড হয়নি (ইন্টারনেট চেক করুন)" : "Could not load times (check internet)";
+        if(timer) clearInterval(timer);
+      }
+    }
+
+    citySelect.addEventListener("change", ()=> loadCity(citySelect.value));
+
+    // Initial load
+    loadCity(citySelect.value);
   </script>
 </body>
 </html>
